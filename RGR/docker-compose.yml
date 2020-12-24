@@ -1,0 +1,30 @@
+version: '3'
+
+services:
+  redis:
+    image: redis
+    restart: always
+    container_name: 'onlinestore_redis'
+    command: redis-server
+    ports:
+      - '6379:6379'
+  web:
+    build: .
+    restart: always
+    container_name: 'onlinestore'
+    command: python online_store/manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/onlinestore
+    ports:
+      - '8000:8000'
+  # celery:
+  #   build: .
+  #   container_name: 'onlinestore_celery'
+  #   command: celery -A onlinestore worker -B
+  #   volumes:
+  #     - .:/onlinestore
+    # links:
+    #   - redis
+    # depends_on:
+    #   - web
+    #   - redis
